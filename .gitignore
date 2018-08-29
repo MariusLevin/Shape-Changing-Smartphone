@@ -1,0 +1,9 @@
+.vscode/*
+__pycache__/*
+COMPUTER/DataExtract/*
+COMPUTER/Results/*
+COMPUTER/backup/*
+COMPUTER/Package/__pycache__/*
+COMPUTER/Data/*
+COMPUTER/_PROG_TEST/*
+COMPUTER/__pycache__/*
