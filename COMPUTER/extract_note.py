@@ -25,6 +25,8 @@ valOrientation = {'00': ['1', '2'], '01': ['2', '1'], '02': ['1', '2'], '03': ['
                     '12': ['2', '1']}
 
 valConfigurationNormalized = ['00', '01', '02', '03', '10', '11', '12', '13', '20', '21', '22', '23', '30', '31', '32', '33']
+valUserIdNormalized = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
+falseResult = ['03']
 
 # STARTING PROGRAM
 print("RESULTS EXTRACT PROGRAM\n")
@@ -33,52 +35,54 @@ input("PRESS ENTER TO CONTINUE")
 # EXTRACT RESULT FILE LIST
 files = os.listdir('./Results/')
 
-for file in files:
-    fileId, extension = os.path.splitext(file)
+for id in valUserIdNormalized:
+    file = id + '.txt'
+    if id not in falseResult and file in files:
 
-    if extension == ".txt":
-        # Print ID
-        print("File ID: " + str(fileId))
+        fileId, extension = os.path.splitext(file)
 
-        # Extract csv file path
-        filePath = "./Results/" + file
+        if extension == ".txt" and fileId not in falseResult:
+            # Print ID
+            print("File ID: " + str(fileId))
 
-        # List to save frame data
-        results = []
+            # Extract csv file path
+            filePath = "./Results/" + file
 
-        # Extract notes
-        with open(filePath, 'r') as f:
-            notes = [line.rstrip('\n') for line in f]
-		
-        # Create configuration dictionnaries
-        dictConfig1 = {}
-        dictConfig2 = {}
-        i = 0
+            # List to save frame data
+            results = []
 
-        # Fill configuration dictionnaries
-        for c in valConfiguration[fileId]:
-            dictConfig1[c] = notes[i]
-            i = i + 1
-        for c in valConfiguration[fileId]:
-            dictConfig2[c] = notes[i]
-            i = i + 1
+            # Extract notes
+            with open(filePath, 'r') as f:
+                notes = [line.rstrip('\n') for line in f]
+            
+            # Create configuration dictionnaries
+            dictConfig1 = {}
+            dictConfig2 = {}
+            i = 0
 
-        message = ""
-        if valOrientation[fileId][0] == '1':
-            for c in valConfigurationNormalized:
-                message = message + dictConfig1[c] + ','
-            for c in valConfigurationNormalized:
-                message = message + dictConfig2[c] + ','
-        
-        elif valOrientation[fileId][0] == '2':
-            for c in valConfigurationNormalized:
-                message = message + dictConfig2[c] + ','
-            for c in valConfigurationNormalized:
-                message = message + dictConfig1[c] + ','
-        message = message + '\n'
+            # Fill configuration dictionnaries
+            for c in valConfiguration[fileId]:
+                dictConfig1[c] = notes[i]
+                i = i + 1
+            for c in valConfiguration[fileId]:
+                dictConfig2[c] = notes[i]
+                i = i + 1
 
-        # Save results
-        with open("./DataExtract/FinalNotesResults.csv", "a") as f:
-	        f.write(message)
+            message = ""
+            if valOrientation[fileId][0] == '1':
+                for c in valConfigurationNormalized:
+                    message = message + dictConfig1[c] + '\n'
+                for c in valConfigurationNormalized:
+                    message = message + dictConfig2[c] + '\n'
+            
+            elif valOrientation[fileId][0] == '2':
+                for c in valConfigurationNormalized:
+                    message = message + dictConfig2[c] + '\n'
+                for c in valConfigurationNormalized:
+                    message = message + dictConfig1[c] + '\n'
+
+            # Save results
+            with open("./DataExtract/FinalNotesResults.csv", "a") as f:
+                f.write(message)
 
 print("\nEND OF THE EXTRACTION")
